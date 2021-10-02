@@ -34,10 +34,13 @@ public class AppiumDemoSteps {
                 desiredCapabilitiesProp.setProperty("device.udid", System.getProperty("device.udid"));
             if(System.getProperty("appium.address") != null)
                 desiredCapabilitiesProp.setProperty("appium.address", System.getProperty("appium.address"));
+            if(System.getProperty("appium.system.port") != null)
+                desiredCapabilitiesProp.setProperty("appium.system.port", System.getProperty("appium.system.port"));
 
             DesiredCapabilities capabilities = new DesiredCapabilities();
             capabilities.setCapability("deviceName", desiredCapabilitiesProp.getProperty("device.name"));
             capabilities.setCapability("udid", desiredCapabilitiesProp.getProperty("device.udid"));
+            capabilities.setCapability("systemPort", desiredCapabilitiesProp.getProperty("appium.system.port"));
             capabilities.setCapability("deviceOrientation", "portrait");
             capabilities.setCapability("automationName", "uiautomator2");
             capabilities.setCapability("appPackage", "com.example.androidappexample");
