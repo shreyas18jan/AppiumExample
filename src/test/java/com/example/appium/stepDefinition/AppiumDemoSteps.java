@@ -10,23 +10,40 @@ import io.cucumber.java.en.When;
 import org.junit.Assert;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 public class AppiumDemoSteps {
     AndroidDriver<MobileElement> androidDriver = null;
 
-    void prerequisite() throws MalformedURLException {
+    void prerequisite() throws Exception {
+        InputStream inputStream = Thread.currentThread()
+                .getContextClassLoader()
+                .getResourceAsStream("capabilities.properties");
+        Properties desiredCapabilitiesProp=new Properties();
+        desiredCapabilitiesProp.load(inputStream);
+
         if(androidDriver == null) {
+            // Override
+            if(System.getProperty("device.name") != null)
+                desiredCapabilitiesProp.setProperty("device.name", System.getProperty("device.name"));
+            if(System.getProperty("device.udid") != null)
+                desiredCapabilitiesProp.setProperty("device.udid", System.getProperty("device.udid"));
+            if(System.getProperty("appium.address") != null)
+                desiredCapabilitiesProp.setProperty("appium.address", System.getProperty("appium.address"));
+
             DesiredCapabilities capabilities = new DesiredCapabilities();
-            capabilities.setCapability("deviceName", "device");
+            capabilities.setCapability("deviceName", desiredCapabilitiesProp.getProperty("device.name"));
+            capabilities.setCapability("udid", desiredCapabilitiesProp.getProperty("device.udid"));
             capabilities.setCapability("deviceOrientation", "portrait");
             capabilities.setCapability("automationName", "uiautomator2");
             capabilities.setCapability("appPackage", "com.example.androidappexample");
             capabilities.setCapability("platformName", "Android");
             capabilities.setCapability("appActivity", "com.example.androidappexample.MainActivity");
-            androidDriver = new AndroidDriver<>(new URL("http://0.0.0.0:4720/wd/hub"), capabilities);
+            androidDriver = new AndroidDriver<>(new URL(desiredCapabilitiesProp.get("appium.address").toString()), capabilities);
             androidDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
         }
     }
@@ -36,7 +53,7 @@ public class AppiumDemoSteps {
     }
 
     @Given("open the App")
-    public void openTheApp() throws MalformedURLException {
+    public void openTheApp() throws Exception {
         prerequisite();
     }
 
