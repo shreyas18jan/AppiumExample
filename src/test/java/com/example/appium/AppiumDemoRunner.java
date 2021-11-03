@@ -7,8 +7,8 @@ import org.junit.runner.RunWith;
 @RunWith(Cucumber.class)
 @CucumberOptions(
         features="src/test/java/com/example/appium/",
-        tags = "@FeatureMultipleOf3",
+        tags = "@Regression",
         glue={"com.example.appium.stepDefinition"},
-        plugin = {"pretty", "html:target/cucumber-reports-FM3.html"})
-public class AppiumDemoRunnerTestFM3 {
+        plugin = {"pretty", "html:target/cucumber-reports-Regression.html"})
+public class AppiumDemoRunner {
 }
